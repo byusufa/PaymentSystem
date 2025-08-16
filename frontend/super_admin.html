@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Super Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-4">
+    <h2 class="mb-4">Super Admin Panel</h2>
+
+    <div id="user-table" class="d-none">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <button class="btn btn-success" onclick="openUser()">+ Add User</button>
+        </div>
+        <table class="table table-bordered table-striped table-hover">
+            <thead class="table-dark">
+            <tr>
+                <th>Full Name</th>
+                <th>Roles</th>
+                <th>Delete</th>
+                <th>Update</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <!-- rows will be added here -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="text-center">
+                <label class="mb-2">
+                    <img id="img" src="images/default.jpg" width="100" height="100">
+                    <!--                    <img id="img" src="src/main/resources/static/images/default.jpg-->
+                    <!--" width="100" height="100">-->
+                    <input style="display: none;cursor: pointer" onchange="userUploadFile(event)" type="file">
+                </label>
+            </div>
+            <form onsubmit="addUser(event)">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalLabel">Add User</h5>
+                </div>
+                <div class="modal-body">
+                    <input id="user-firstName" type="text" class="form-control" placeholder="FirstName" required>
+                </div>
+                <div class="modal-body">
+                    <input id="user-lastName" type="text" class="form-control" placeholder="LastName" required>
+                </div>
+                <div class="modal-body">
+                    <input id="user-userName" type="text" class="form-control" placeholder="UserName" required>
+                </div>
+                <div class="modal-body">
+                    <input id="user-password" type="text" class="form-control" placeholder="Password" required>
+                </div>
+                <div class="modal-body">
+                    <select id="selectRole" name="roleId" class="form-select"></select>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Save</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+
+    let attachmentId = "";
+    axios({
+        url: "http://localhost:8080/api/super_admin",
+        method: "GET",
+        headers: {
+            "Authorization": localStorage.getItem("token")
+        }
+    }).then(res => {
+        console.log(res.data);
+        let tbody = document.getElementById("tbody");
+        let userTable = document.getElementById("user-table");
+
+        let html = "";
+        for (let item of res.data) {
+            html += `
+                <tr>
+                    <td>${item.fullName}</td>
+                    <td>${item.roleName}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteUser(${item.id})">Delete</button></td>
+                    <td><button class="btn btn-warning btn-sm" onclick="editUser(${item.id})">Update</button></td>
+                </tr>
+            `;
+        }
+        tbody.innerHTML = html;
+        userTable.classList.remove("d-none");
+    }).catch(err => {
+        console.error("Error loading users:", err);
+    });
+
+    function openUser() {
+        new bootstrap.Modal(document.getElementById('userModal')).show();
+        selectRoleForAddUser();
+    }
+
+    function addUser(event) {
+        event.preventDefault();
+
+        const firstName = document.getElementById("user-firstName").value;
+        const lastName = document.getElementById("user-lastName").value;
+        const username = document.getElementById("user-userName").value;
+        const password = document.getElementById("user-password").value;
+        const roleId = document.getElementById("selectRole").value;
+
+
+        axios({
+            url: "http://localhost:8080/api/super_admin",
+            method: "POST",
+            data: {
+                firstName: firstName,
+                lastName: lastName,
+                username: username,
+                password: password,
+                roleId: roleId,
+                attachmentId: attachmentId
+            },
+            headers: {
+                "Authorization": localStorage.getItem("token"),
+            }
+        }).then(res => {
+            console.log(res.data);
+
+        }).catch(err => {
+            console.error("Error loading users:", err);
+        });
+
+    }
+
+
+    function selectRoleForAddUser() {
+
+        axios({
+            url: "http://localhost:8080/api/super_admin/role",
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token")
+            }
+        }).then(res => {
+            let s = `<option selected disabled>Select Role</option>`;
+            for (let item of res.data) {
+                console.log(res.data)
+                s += `<option value="${item.id}">${item.roleName}</option>`
+            }
+            document.getElementById("selectRole").innerHTML = s;
+        }).catch(err => {
+            console.error("Error:", err);
+
+        });
+    }
+
+    function userUploadFile(event) {
+        let file = event.target.files[0];
+        let formData = new FormData();
+        formData.append("file", file)
+        axios.post('http://localhost:8080/api/file', formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                "Authorization": localStorage.getItem("token")
+            },
+        }).then(res => {
+            document.getElementById("img").src = "http://localhost:8080/api/file/" + res.data
+            attachmentId = res.data;
+        })
+    }
+
+    function deleteUser(id) {
+        alert("Delete user with ID: " + id);
+        // axios delete qilish joyi
+    }
+
+    function editUser(id) {
+        alert("Edit user with ID: " + id);
+        // axios update qilish joyi
+    }
+
+</script>
+
+</body>
+</html>
