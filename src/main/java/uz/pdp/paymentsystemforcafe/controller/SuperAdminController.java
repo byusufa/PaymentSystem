@@ -29,4 +29,10 @@ public class SuperAdminController {
         return ResponseEntity.status(200).body(superAdminService.getUserRoles());
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
+        System.out.println(id);
+        return ResponseEntity.status(200).body(superAdminService.deleteUser(id));
+    }
+
 }

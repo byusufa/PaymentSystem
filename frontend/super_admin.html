@@ -17,6 +17,7 @@
         <table class="table table-bordered table-striped table-hover">
             <thead class="table-dark">
             <tr>
+                <th>Image</th>
                 <th>Full Name</th>
                 <th>Roles</th>
                 <th>Delete</th>
@@ -55,7 +56,7 @@
                     <input id="user-userName" type="text" class="form-control" placeholder="UserName" required>
                 </div>
                 <div class="modal-body">
-                    <input id="user-password" type="text" class="form-control" placeholder="Password" required>
+                    <input id="user-password" type="password" class="form-control" placeholder="Password" required>
                 </div>
                 <div class="modal-body">
                     <select id="selectRole" name="roleId" class="form-select"></select>
@@ -76,33 +77,40 @@
 <script>
 
     let attachmentId = "";
-    axios({
-        url: "http://localhost:8080/api/super_admin",
-        method: "GET",
-        headers: {
-            "Authorization": localStorage.getItem("token")
-        }
-    }).then(res => {
-        console.log(res.data);
-        let tbody = document.getElementById("tbody");
-        let userTable = document.getElementById("user-table");
 
-        let html = "";
-        for (let item of res.data) {
-            html += `
+    function getAllUsers() {
+        axios({
+            url: "http://localhost:8080/api/super_admin",
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token")
+            }
+        }).then(res => {
+            let tbody = document.getElementById("tbody");
+            let userTable = document.getElementById("user-table");
+
+            let html = "";
+            for (let item of res.data) {
+                html += `
                 <tr>
+                    <td>
+                        ${item.attachmentId ? `<img src="http://localhost:8080/api/file/${item.attachmentId}" alt="topilmadi" height="50" width="50">` : 'Rasm yo‘q'}
+                    </td>
                     <td>${item.fullName}</td>
                     <td>${item.roleName}</td>
                     <td><button class="btn btn-danger btn-sm" onclick="deleteUser(${item.id})">Delete</button></td>
                     <td><button class="btn btn-warning btn-sm" onclick="editUser(${item.id})">Update</button></td>
                 </tr>
             `;
-        }
-        tbody.innerHTML = html;
-        userTable.classList.remove("d-none");
-    }).catch(err => {
-        console.error("Error loading users:", err);
-    });
+            }
+            tbody.innerHTML = html;
+            userTable.classList.remove("d-none");
+        }).catch(err => {
+            console.error("Error loading users:", err);
+        });
+    }
+
+    getAllUsers();
 
     function openUser() {
         new bootstrap.Modal(document.getElementById('userModal')).show();
@@ -117,7 +125,6 @@
         const username = document.getElementById("user-userName").value;
         const password = document.getElementById("user-password").value;
         const roleId = document.getElementById("selectRole").value;
-
 
         axios({
             url: "http://localhost:8080/api/super_admin",
@@ -134,14 +141,20 @@
                 "Authorization": localStorage.getItem("token"),
             }
         }).then(res => {
-            console.log(res.data);
+
+            let modalElement = document.getElementById("userModal");
+            let modal = bootstrap.Modal.getInstance(modalElement);
+            modal.hide();
+            getAllUsers();
+            document.querySelector("#userModal form").reset();
+            document.getElementById("img").src = "images/default.jpg";
+            attachmentId = "";
 
         }).catch(err => {
             console.error("Error loading users:", err);
         });
 
     }
-
 
     function selectRoleForAddUser() {
 
@@ -180,8 +193,19 @@
     }
 
     function deleteUser(id) {
-        alert("Delete user with ID: " + id);
-        // axios delete qilish joyi
+        axios({
+            url: "http://localhost:8080/api/super_admin/" + id,
+            method: "DELETE",
+            headers: {
+                "Authorization": localStorage.getItem("token")
+            }
+        }).then(res => {
+            console.log(res.data);
+            getAllUsers();
+        }).catch(err => {
+            console.error("Error:", err);
+
+        });
     }
 
     function editUser(id) {
