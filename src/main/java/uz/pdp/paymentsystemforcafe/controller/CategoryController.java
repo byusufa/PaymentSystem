@@ -11,7 +11,6 @@ import uz.pdp.paymentsystemforcafe.service.CategoryService;
 @RequestMapping("/api/category")
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin
 public class CategoryController {
 
     private final CategoryService categoryService;
