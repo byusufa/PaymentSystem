@@ -44,7 +44,7 @@
             </div>
             <form onsubmit="addUser(event)">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="productModalLabel">Add User</h5>
+                    <h5 class="modal-title" id="userModalLabel">Add User</h5>
                 </div>
                 <div class="modal-body">
                     <input id="user-firstName" type="text" class="form-control" placeholder="FirstName" required>
@@ -77,6 +77,7 @@
 <script>
 
     let attachmentId = "";
+    let currentUserId = "";
 
     function getAllUsers() {
         axios({
@@ -99,7 +100,7 @@
                     <td>${item.fullName}</td>
                     <td>${item.roleName}</td>
                     <td><button class="btn btn-danger btn-sm" onclick="deleteUser(${item.id})">Delete</button></td>
-                    <td><button class="btn btn-warning btn-sm" onclick="editUser(${item.id})">Update</button></td>
+                    <td><button class="btn btn-warning btn-sm" onclick="openUser(${item.id})">Update</button></td>
                 </tr>
             `;
             }
@@ -112,9 +113,45 @@
 
     getAllUsers();
 
-    function openUser() {
-        new bootstrap.Modal(document.getElementById('userModal')).show();
-        selectRoleForAddUser();
+    function openUser(userId) {
+        currentUserId = userId;
+        let modal = new bootstrap.Modal(document.getElementById('userModal'));
+        if (currentUserId) {
+            document.getElementById("userModalLabel").innerText = "Update User";
+            axios({
+                url: "http://localhost:8080/api/super_admin/" + currentUserId,
+                method: "GET",
+                headers: {
+                    "Authorization": localStorage.getItem("token"),
+                }
+
+            }).then(res => {
+                document.getElementById("user-firstName").value = res.data.firstName;
+                document.getElementById("user-lastName").value = res.data.lastName;
+                document.getElementById("user-userName").value = res.data.username;
+                document.getElementById("user-password").value = res.data.password;
+                document.getElementById("selectRole").value = res.data.roleId;
+                attachmentId = res.data.attachment.id;
+                document.getElementById("img").src = "http://localhost:8080/api/file/" + res.data.attachment.id;
+                modal.show();
+            }).catch(err => {
+                console.error("Error loading users:", err);
+            });
+
+        } else {
+            selectRoleForAddUser();
+            document.getElementById("userModalLabel").innerText = "Add User"
+            document.getElementById("user-firstName").value = "";
+            document.getElementById("user-lastName").value = "";
+            document.getElementById("user-userName").value = "";
+            document.getElementById("user-password").value = ""
+            document.getElementById("selectRole").selectedIndex = 0;
+            document.getElementById("img").src = "images/default.jpg";
+            modal.show();
+
+        }
+
+
     }
 
     function addUser(event) {
@@ -208,10 +245,6 @@
         });
     }
 
-    function editUser(id) {
-        alert("Edit user with ID: " + id);
-        // axios update qilish joyi
-    }
 
 </script>
 

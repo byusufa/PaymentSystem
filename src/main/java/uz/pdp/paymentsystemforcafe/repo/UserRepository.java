@@ -14,8 +14,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByUsername(String username);
 
     @Query(value = """
-            select u.id,u.attachment_id as attachmentId,u.first_name || ' ' || u.last_name as fullName, r.role_name
-            from users u join users_roles ur on u.id = ur.user_id join roles r on ur.roles_id = r.id
+      select u.id,u.attachment_id,u.first_name || ' ' || u.last_name as fullName,string_agg(r.role_name, ', ') as roleName from users u join 
+      users_roles ur on u.id = ur.user_id join roles r on ur.roles_id = r.id group by u.id, u.attachment_id, u.first_name, u.last_name
             """, nativeQuery = true)
     List<UserPro> getAllUsersAndRoles();
 

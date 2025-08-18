@@ -31,6 +31,10 @@ public class SuperAdminService {
         return userRepository.getAllUsersAndRoles();
     }
 
+    public User getUserById(Integer id) {
+        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
+
 
     public User addUsers(UserDto userDto) {
         Attachment attachment = attachmentRepository.findById(userDto.getAttachmentId()).orElseThrow(
@@ -53,17 +57,31 @@ public class SuperAdminService {
     }
 
     public User deleteUser(Integer id) {
-
         User user = userRepository.findById(id).orElseThrow(
                 () -> new IllegalArgumentException("User not found"));
-        Attachment attachment = attachmentRepository.findById(user.getAttachment().getId()).orElseThrow(
-                () -> new IllegalArgumentException("Attachment not found"));
-        AttachmentContent attachmentContent = attachmentContentRepository.findByAttachmentId(attachment.getId());
-        attachmentContentRepository.delete(attachmentContent);
-        attachmentRepository.delete(attachment);
+        if (user.getAttachment() != null) {
+            Attachment attachment = attachmentRepository.findById(user.getAttachment().getId()).orElseThrow(
+                    () -> new IllegalArgumentException("Attachment not found"));
+            AttachmentContent attachmentContent = attachmentContentRepository.findByAttachmentId(attachment.getId());
+            attachmentContentRepository.delete(attachmentContent);
+            attachmentRepository.delete(attachment);
+        }
         userRepository.delete(user);
         return user;
     }
 
-
+    public User updateUser(Integer id, UserDto userDto) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setUsername(userDto.getUsername());
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        Role roles = roleRepository.findById(userDto.getRoleId()).orElseThrow(() -> new IllegalArgumentException("Role not found"));
+        user.setRoles(new ArrayList<>(List.of(roles)));
+        Attachment attachment = attachmentRepository.findById(userDto.getAttachmentId()).orElseThrow(
+                () -> new IllegalArgumentException("Attachment not found"));
+        user.setAttachment(attachment);
+        userRepository.save(user);
+        return user;
+    }
 }
