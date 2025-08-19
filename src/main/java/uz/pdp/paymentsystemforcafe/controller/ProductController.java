@@ -3,7 +3,8 @@ package uz.pdp.paymentsystemforcafe.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.paymentsystemforcafe.dto.ProductDto;
+import uz.pdp.paymentsystemforcafe.dto.ProductRequestDto;
+import uz.pdp.paymentsystemforcafe.dto.ProductResponseDto;
 import uz.pdp.paymentsystemforcafe.entity.Product;
 import uz.pdp.paymentsystemforcafe.service.ProductService;
 
@@ -30,8 +31,8 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addProduct(@RequestBody ProductDto productDto) {
-        return ResponseEntity.status(201).body(productService.addProduct(productDto));
+    public ResponseEntity<?> addProduct(@RequestBody ProductRequestDto productRequestDto) {
+        return ResponseEntity.status(201).body(productService.addProduct(productRequestDto));
     }
 
 
@@ -41,9 +42,8 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody ProductDto productDto) {
-        Product product = productService.updateProduct(id, productDto);
-        return ResponseEntity.status(200).body(product);
+    public ResponseEntity<?> updateProduct(@PathVariable Integer id, @RequestBody ProductRequestDto productRequestDto) {
+        return ResponseEntity.status(200).body(productService.updateProduct(id, productRequestDto));
     }
 
     @GetMapping("/category/{categoryId}")
