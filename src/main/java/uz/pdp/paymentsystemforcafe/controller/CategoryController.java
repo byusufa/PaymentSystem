@@ -3,7 +3,8 @@ package uz.pdp.paymentsystemforcafe.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.paymentsystemforcafe.dto.CategoryDto;
+import uz.pdp.paymentsystemforcafe.dto.CategoryRequestDto;
+import uz.pdp.paymentsystemforcafe.dto.CategoryResponseDto;
 import uz.pdp.paymentsystemforcafe.entity.Category;
 import uz.pdp.paymentsystemforcafe.service.CategoryService;
 
@@ -22,26 +23,24 @@ public class CategoryController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getCategoryById(@PathVariable Integer id) {
-        Category category = categoryService.getCategoryById(id);
-        return ResponseEntity.status(200).body(category);
+        return ResponseEntity.status(200).body(categoryService.getCategoryById(id));
     }
 
     @PostMapping
-    public ResponseEntity<?> addCategory(@RequestBody CategoryDto categoryDto) {
-        return ResponseEntity.status(201).body(categoryService.addCategory(categoryDto));
+    public ResponseEntity<?> addCategory(@RequestBody CategoryRequestDto categoryRequestDto) {
+        return ResponseEntity.status(201).body(categoryService.addCategory(categoryRequestDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Integer id) {
-        Category deletedCategory = categoryService.deleteCategory(id);
-        return ResponseEntity.ok(deletedCategory);
+        return ResponseEntity.status(200).body(categoryService.deleteCategory(id));
     }
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateCategory(@PathVariable Integer id, @RequestBody CategoryDto categoryDto) {
-        Category category = categoryService.updateCategory(id, categoryDto);
-        return ResponseEntity.status(200).body(category);
+    public ResponseEntity<?> updateCategory(@PathVariable Integer id, @RequestBody CategoryRequestDto categoryRequestDto) {
+
+        return ResponseEntity.status(200).body(categoryService.updateCategory(id, categoryRequestDto));
     }
 
 
