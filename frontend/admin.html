@@ -260,13 +260,13 @@
                 s += `<tr>
                     <td>${item.id}</td>
                     <td>
-                        ${item.attachment ? `<img src="http://localhost:8080/api/file/${item.attachment.id}" alt="topilmadi" height="50" width="50">` : 'Rasm yo‘q'}
+                        ${item.attachmentId ? `<img src="http://localhost:8080/api/file/${item.attachmentId}" alt="topilmadi" height="50" width="50">` : 'Rasm yo‘q'}
                     </td>
 
                     <td>${item.name}</td>
                     <td>${item.price}</td>
                     <td>${item.isActive}</td>
-                    <td>${item.category.name}</td>
+                    <td>${item.categoryName}</td>
 
                     <td>
                         <button class="btn btn-danger btn-sm" onclick="deleteProduct(${item.id})">
@@ -302,10 +302,10 @@
             }).then(res => {
                 document.getElementById("product-name").value = res.data.name;
                 document.getElementById("product-price").value = res.data.price;
-                document.getElementById("selectCategory").value = res.data.category.id;
+                document.getElementById("selectCategory").value = res.data.categoryName;
                 document.getElementById("isActive").checked = res.data.isActive;
-                attachmentId = res.data.attachment.id;
-                document.getElementById("img").src = "http://localhost:8080/api/file/" + res.data.attachment.id;
+                attachmentId = res.data.attachmentId;
+                document.getElementById("img").src = "http://localhost:8080/api/file/" + res.data.attachmentId;
                 modal.show();
 
             }).catch(err => {
