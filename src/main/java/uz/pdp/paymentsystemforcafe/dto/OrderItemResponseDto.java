@@ -9,6 +9,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OrderItemResponseDto {
     private UUID id;
     private Integer count;
