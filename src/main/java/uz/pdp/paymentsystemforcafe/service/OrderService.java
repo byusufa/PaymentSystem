@@ -26,33 +26,6 @@ public class OrderService {
 
     public OrderResponseDto addOrder(List<OrderItemRequestDto> orderItemRequestDto) {
 
-//        if (orderItemRequestDto == null || orderItemRequestDto.isEmpty()) {
-//            throw new RuntimeException("Savatcha bo‘sh. Order yaratib bo‘lmaydi.");
-//        }
-//
-//        YearMonth currentMonth = YearMonth.now();
-//        int year = currentMonth.getYear();
-//        int month = currentMonth.getMonthValue();
-//        Integer maxOrderNumber = orderRepository.findMaxOrderNumberByMonth(year, month).orElse(0);
-//        Order order = new Order();
-//        order.setOrderNumber(maxOrderNumber + 1);
-//        order.setOrderYear(year);
-//        order.setOrderMonth(month);
-//
-//        for (OrderItemRequestDto item : orderItemRequestDto) {
-//            OrderItem orderItem = new OrderItem();
-//            Product product = productRepository.findById(item.getId()).orElseThrow(()
-//                    -> new RuntimeException("Product not found"));
-//            orderItem.setProduct(product);
-//            orderItem.setOrder(order);
-//            orderItem.setCount(item.getCount());
-//            order.getOrderItems().add(orderItem);
-//
-//        }
-//
-//        orderRepository.save(order);
-//        return order;
-
         if (orderItemRequestDto == null || orderItemRequestDto.isEmpty()) {
             throw new RuntimeException("Savatcha bo‘sh. Order yaratib bo‘lmaydi.");
         }
