@@ -3,7 +3,7 @@ package uz.pdp.paymentsystemforcafe.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.paymentsystemforcafe.dto.OrderItemDto;
+import uz.pdp.paymentsystemforcafe.dto.OrderItemRequestDto;
 import uz.pdp.paymentsystemforcafe.service.OrderService;
 
 import java.util.List;
@@ -16,8 +16,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public ResponseEntity<?> addOrder(@RequestBody List<OrderItemDto> orderItemDto) {
-        return ResponseEntity.status(201).body(orderService.addOrder(orderItemDto));
+    public ResponseEntity<?> addOrder(@RequestBody List<OrderItemRequestDto> orderItemRequestDto) {
+        return ResponseEntity.status(201).body(orderService.addOrder(orderItemRequestDto));
     }
 
     @GetMapping
