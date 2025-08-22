@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemDto {
+public class OrderItemRequestDto {
     private Integer id;
     private Integer count;
 }
