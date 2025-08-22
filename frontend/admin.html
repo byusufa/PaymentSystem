@@ -289,7 +289,7 @@
     function openProduct(productId) {
         currentProductId = productId;
         const modal = new bootstrap.Modal(document.getElementById('productModal'));
-        selectCategoryForAddProduct()
+        selectCategoryForAddProduct();
 
         if (currentProductId) {
             document.getElementById("productModalLabel").innerText = "Update product";
@@ -302,7 +302,7 @@
             }).then(res => {
                 document.getElementById("product-name").value = res.data.name;
                 document.getElementById("product-price").value = res.data.price;
-                document.getElementById("selectCategory").value = res.data.categoryName;
+                document.getElementById("selectCategory").value = res.data.categoryId;
                 document.getElementById("isActive").checked = res.data.isActive;
                 attachmentId = res.data.attachmentId;
                 document.getElementById("img").src = "http://localhost:8080/api/file/" + res.data.attachmentId;
