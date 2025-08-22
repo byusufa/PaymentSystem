@@ -2,7 +2,9 @@ package uz.pdp.paymentsystemforcafe.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import uz.pdp.paymentsystemforcafe.dto.OrderItemDto;
+import uz.pdp.paymentsystemforcafe.dto.OrderItemRequestDto;
+import uz.pdp.paymentsystemforcafe.dto.OrderItemResponseDto;
+import uz.pdp.paymentsystemforcafe.dto.OrderResponseDto;
 import uz.pdp.paymentsystemforcafe.projection.OrderPro;
 import uz.pdp.paymentsystemforcafe.entity.Order;
 import uz.pdp.paymentsystemforcafe.entity.OrderItem;
@@ -21,8 +23,8 @@ public class OrderService {
     private final ProductRepository productRepository;
 
 
-    public Order addOrder(List<OrderItemDto> orderItemDto) {
-        if (orderItemDto == null || orderItemDto.isEmpty()) {
+    public Order addOrder(List<OrderItemRequestDto> orderItemRequestDto) {
+        if (orderItemRequestDto == null || orderItemRequestDto.isEmpty()) {
             throw new RuntimeException("Savatcha bo‘sh. Order yaratib bo‘lmaydi.");
         }
 
@@ -35,7 +37,7 @@ public class OrderService {
         order.setOrderYear(year);
         order.setOrderMonth(month);
 
-        for (OrderItemDto item : orderItemDto) {
+        for (OrderItemRequestDto item : orderItemRequestDto) {
             OrderItem orderItem = new OrderItem();
             Product product = productRepository.findById(item.getId()).orElseThrow(()
                     -> new RuntimeException("Product not found"));
@@ -46,8 +48,8 @@ public class OrderService {
 
         }
 
-        return orderRepository.save(order);
-
+        orderRepository.save(order);
+        return order;
     }
 
     public List<OrderPro> getAllOrders() {
