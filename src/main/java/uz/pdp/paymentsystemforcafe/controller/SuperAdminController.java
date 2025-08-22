@@ -3,7 +3,7 @@ package uz.pdp.paymentsystemforcafe.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import uz.pdp.paymentsystemforcafe.dto.UserDto;
+import uz.pdp.paymentsystemforcafe.dto.UserRequestDto;
 import uz.pdp.paymentsystemforcafe.service.SuperAdminService;
 
 @RestController
@@ -24,9 +24,9 @@ public class SuperAdminController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addUser(@RequestBody UserDto userDto) {
-        System.out.println(userDto);
-        return ResponseEntity.status(201).body(superAdminService.addUsers(userDto));
+    public ResponseEntity<?> addUser(@RequestBody UserRequestDto userRequestDto) {
+        System.out.println(userRequestDto);
+        return ResponseEntity.status(201).body(superAdminService.addUsers(userRequestDto));
     }
 
     @GetMapping("/role")
@@ -41,9 +41,9 @@ public class SuperAdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UserDto userDto) {
-        System.out.println(userDto);
-        return ResponseEntity.status(200).body(superAdminService.updateUser(id,userDto));
+    public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UserRequestDto userRequestDto) {
+        System.out.println(userRequestDto);
+        return ResponseEntity.status(200).body(superAdminService.updateUser(id, userRequestDto));
     }
 
 
