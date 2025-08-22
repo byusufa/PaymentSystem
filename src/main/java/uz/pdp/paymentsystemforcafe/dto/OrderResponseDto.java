@@ -1,9 +1,6 @@
 package uz.pdp.paymentsystemforcafe.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import uz.pdp.paymentsystemforcafe.entity.OrderItem;
 
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class OrderResponseDto {
     private UUID id;
     private Integer orderNumber;
