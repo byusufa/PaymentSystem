@@ -32,7 +32,8 @@ public class SuperAdminService {
     }
 
     public User getUserById(Integer id) {
-        return userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return userRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("User not found"));
     }
 
 
