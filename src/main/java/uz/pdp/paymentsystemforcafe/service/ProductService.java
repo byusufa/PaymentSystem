@@ -7,6 +7,7 @@ import uz.pdp.paymentsystemforcafe.dto.ProductResponseDto;
 import uz.pdp.paymentsystemforcafe.entity.Attachment;
 import uz.pdp.paymentsystemforcafe.entity.Category;
 import uz.pdp.paymentsystemforcafe.entity.Product;
+import uz.pdp.paymentsystemforcafe.repo.AttachmentContentRepository;
 import uz.pdp.paymentsystemforcafe.repo.AttachmentRepository;
 import uz.pdp.paymentsystemforcafe.repo.CategoryRepository;
 import uz.pdp.paymentsystemforcafe.repo.ProductRepository;
@@ -22,6 +23,7 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final AttachmentRepository attachmentRepository;
+    private final AttachmentContentRepository attachmentContentRepository;
 
     public List<ProductResponseDto> getAllProducts() {
         List<Product> products = productRepository.findAll();
@@ -42,7 +44,17 @@ public class ProductService {
     }
 
     public List<ProductResponseDto> getAllProductsIsActive() {
-        return productRepository.getAllProductsIsActive();
+        return productRepository.getAllProductsIsActive()
+                .stream()
+                .map(product -> ProductResponseDto.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .isActive(product.getIsActive())
+                        .categoryId(product.getCategory().getId())
+                        .categoryName(product.getCategory().getName())
+                        .attachmentId(product.getAttachment().getId())
+                        .build()).toList();
     }
 
     public ProductResponseDto getProductById(Integer id) {
@@ -54,6 +66,7 @@ public class ProductService {
                 .price(product.getPrice())
                 .isActive(product.getIsActive())
                 .categoryId(product.getCategory().getId())
+                .categoryName(product.getCategory().getName())
                 .attachmentId(product.getAttachment().getId())
                 .build();
     }
@@ -79,15 +92,21 @@ public class ProductService {
     }
 
     public ProductResponseDto deleteProduct(Integer id) {
-        Product product = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("There is no category with id: " + id));
-        productRepository.delete(product);
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new NoSuchElementException("There is no category with id: " + id));
+        Attachment attachment = product.getAttachment();
+        if (attachment != null) {
+            attachmentContentRepository.deleteById(attachment.getId());
+            productRepository.delete(product);
+            attachmentRepository.delete(attachment);
+        }
         return ProductResponseDto.builder()
                 .id(product.getId())
                 .name(product.getName())
                 .price(product.getPrice())
                 .isActive(product.getIsActive())
                 .categoryId(product.getCategory().getId())
-                .attachmentId(product.getAttachment().getId())
+                .attachmentId(attachment != null ? attachment.getId() : null)
                 .build();
     }
 
@@ -118,7 +137,18 @@ public class ProductService {
     }
 
     public List<ProductResponseDto> getProductByCategoryId(Integer categoryId) {
-        return productRepository.getProductsByCategoryId(categoryId);
+        return productRepository.getProductsByCategoryId(categoryId).stream()
+                .map(product -> ProductResponseDto.builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .price(product.getPrice())
+                        .isActive(product.getIsActive())
+                        .categoryId(product.getCategory().getId())
+                        .categoryName(product.getCategory().getName())
+                        .attachmentId(product.getAttachment().getId())
+                        .build()
+                ).toList();
     }
+
 
 }
