@@ -12,9 +12,9 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     boolean existsByCategoryId(Integer categoryId);
 
     @Query(value = "select * from product p where p.category_id = :categoryId and p.is_active = true ", nativeQuery = true)
-    List<ProductResponseDto> getProductsByCategoryId(@Param("categoryId") Integer categoryId);
+    List<Product> getProductsByCategoryId(@Param("categoryId") Integer categoryId);
 
     @Query(value = "select * from product p where p.is_active=true", nativeQuery = true)
-    List<ProductResponseDto> getAllProductsIsActive();
+    List<Product> getAllProductsIsActive();
 
 }
