@@ -11,6 +11,8 @@
     <div class="row">
         <div class="d-flex justify-content-end gap-2 mb-3">
             <span id="firstName" class="align-self-center fw-bold text-primary"></span>
+            <img id="avatar" width="40" height="40" style="border-radius: 50%; object-fit: cover;"/>
+            <button id="logout" class="btn btn-danger" onclick="logout()">Logout</button>
             <a href="/PaymentSystemForCafe/frontend/order.html" class="btn btn-danger">Order</a>
         </div>
         <div class="col-md-12 offset-md-1">
@@ -232,8 +234,35 @@
 
         }).then(res => {
             document.getElementById("firstName").innerHTML = res.data.firstName;
+            document.getElementById("avatar").src = "http://localhost:8080/api/file/" + res.data.attachmentId;
         }).catch(err => {
             console.error("Error:", err);
+        });
+    }
+
+    function logout() {
+        axios({
+            url: "http://localhost:8080/api/logout",
+            method: "POST",
+            headers: {
+                "Authorization": localStorage.getItem("token")
+            }
+        }).then(res => {
+            console.log("Logout javobi:", res.data);
+
+            // ✅ Tokenni localStorage'dan o‘chirish
+            localStorage.removeItem("token");
+
+            // ✅ Login sahifasiga yo‘naltirish
+            window.location.href = "http://localhost:63342/PaymentSystemForCafe/frontend/login.html?_ijt=pv38qdp5a693qd6ignjjcnntf6&_ij_reload=RELOAD_ON_SAVE";
+
+
+        }).catch(err => {
+            console.error("Logout xatolik:", err);
+
+            // ❗ Xatolik bo‘lsa ham, foydalanuvchini tokenni o‘chirib yuborish xavfsiz
+            localStorage.removeItem("token");
+            window.location.href = "/login.html";
         });
     }
 
