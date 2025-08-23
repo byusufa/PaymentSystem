@@ -9,6 +9,11 @@
 
 <div class="container mt-4">
     <h2 class="mb-4">Super Admin Panel</h2>
+    <div class="d-flex justify-content-end gap-2 mb-3">
+        <span id="firstName" class="align-self-center fw-bold text-primary"></span>
+        <img id="avatar" width="40" height="40" style="border-radius: 50%; object-fit: cover;"/>
+        <button id="logout" class="btn btn-danger" onclick="logout()">Logout</button>
+    </div>
 
     <div id="user-table" class="d-none">
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -140,8 +145,6 @@
                 document.getElementById("user-userName").value = res.data.username;
                 document.getElementById("user-password").value = res.data.password;
                 document.getElementById("img").src = "http://localhost:8080/api/file/" + res.data.attachmentId;
-
-
                 modal.show();
 
             }).catch(err => {
@@ -317,6 +320,56 @@
         }).catch(err => {
             console.error("Error:", err);
 
+        });
+    }
+
+    function getMe() {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.warn("Token topilmadi.");
+            return;
+        }
+
+        axios({
+            url: "http://localhost:8080/api/user/me",
+            method: "GET",
+            headers: {
+                "Authorization": localStorage.getItem("token")
+            }
+        }).then(res => {
+            document.getElementById("firstName").innerHTML = res.data.firstName;
+            document.getElementById("avatar").src = "http://localhost:8080/api/file/" + res.data.attachmentId;
+
+        }).catch(err => {
+            console.error("Error:", err);
+        });
+    }
+
+    getMe();
+
+    function logout() {
+        axios({
+            url: "http://localhost:8080/api/logout",
+            method: "POST",
+            headers: {
+                "Authorization": localStorage.getItem("token")
+            }
+        }).then(res => {
+            console.log("Logout javobi:", res.data);
+
+            // ✅ Tokenni localStorage'dan o‘chirish
+            localStorage.removeItem("token");
+
+            // ✅ Login sahifasiga yo‘naltirish
+            window.location.href = "http://localhost:63342/PaymentSystemForCafe/frontend/login.html?_ijt=pv38qdp5a693qd6ignjjcnntf6&_ij_reload=RELOAD_ON_SAVE";
+
+        }).catch(err => {
+            console.error("Logout xatolik:", err);
+
+            // ❗ Xatolik bo‘lsa ham, foydalanuvchini tokenni o‘chirib yuborish xavfsiz
+            localStorage.removeItem("token");
+            window.location.href = "/login.html";
         });
     }
 
