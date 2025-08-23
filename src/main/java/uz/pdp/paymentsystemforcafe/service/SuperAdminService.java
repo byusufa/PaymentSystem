@@ -61,15 +61,14 @@ public class SuperAdminService {
     public UserResponseDto addUsers(UserRequestDto userRequestDto) {
         Attachment attachment = attachmentRepository.findById(userRequestDto.getAttachmentId()).orElseThrow(
                 () -> new IllegalArgumentException("Attachment not found"));
-        Role roles = roleRepository.findById(userRequestDto.getRoleId()).orElseThrow(
-                () -> new IllegalArgumentException("Role not found"));
+        List<Role> roles = roleRepository.findAllById(userRequestDto.getRoleIds());
         User user = new User();
         user.setFirstName(userRequestDto.getFirstName());
         user.setLastName(userRequestDto.getLastName());
         user.setUsername(userRequestDto.getUsername());
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         user.setAttachment(attachment);
-        user.setRoles(new ArrayList<>(List.of(roles)));
+        user.setRoles(roles);
         User saveUser = userRepository.save(user);
 
         return UserResponseDto.builder()
@@ -134,8 +133,8 @@ public class SuperAdminService {
         user.setLastName(userRequestDto.getLastName());
         user.setUsername(userRequestDto.getUsername());
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-        Role roles = roleRepository.findById(userRequestDto.getRoleId()).orElseThrow(() -> new IllegalArgumentException("Role not found"));
-        user.setRoles(new ArrayList<>(List.of(roles)));
+        List<Role> roles1 = roleRepository.findAllById(userRequestDto.getRoleIds());
+        user.setRoles(roles1);
         Attachment attachment = attachmentRepository.findById(userRequestDto.getAttachmentId()).orElseThrow(
                 () -> new IllegalArgumentException("Attachment not found"));
         user.setAttachment(attachment);
