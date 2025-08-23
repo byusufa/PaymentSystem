@@ -28,11 +28,11 @@ public class SecurityConfig {
         http.authorizeHttpRequests(req ->
                 req
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/login", "/images/**", "/api/file/**").permitAll()
+                        .requestMatchers("/api/login/**", "/images/**", "/api/file/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/category/**", "/api/product/**", "/api/product/category/**", "/api/order", "/api/orderItem/**").hasRole("CASHIER")
-                        .requestMatchers(HttpMethod.POST, "/api/order/**").hasRole("CASHIER")
+                        .requestMatchers(HttpMethod.POST, "/api/order/**","/api/logout/**").hasRole("CASHIER")
                         .requestMatchers("/api/category/**", "/api/product/**", "/api/order/**","/api/logout/**","/api/report/**").hasRole("ADMIN")
-                        .requestMatchers("/api/super_admin/**").hasRole("SUPER_ADMIN")
+                        .requestMatchers("/api/super_admin/**","/api/logout/**").hasRole("SUPER_ADMIN")
                         .anyRequest().authenticated());
 
         http.userDetailsService(customUserDetailsService);
