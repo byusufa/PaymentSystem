@@ -3,6 +3,7 @@ package uz.pdp.paymentsystemforcafe.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uz.pdp.paymentsystemforcafe.entity.User;
@@ -18,7 +19,8 @@ public class UserController {
 
         return ResponseEntity.ok(Map.of(
                         "id", user.getId(),
-                        "firstName", user.getFirstName()
+                        "firstName", user.getFirstName(),
+                        "attachmentId", user.getAttachment().getId()
 
                 )
         );
