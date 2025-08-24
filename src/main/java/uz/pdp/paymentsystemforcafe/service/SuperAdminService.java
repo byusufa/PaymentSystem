@@ -133,8 +133,10 @@ public class SuperAdminService {
         user.setLastName(userRequestDto.getLastName());
         user.setUsername(userRequestDto.getUsername());
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-        List<Role> roles1 = roleRepository.findAllById(userRequestDto.getRoleIds());
-        user.setRoles(roles1);
+        user.getRoles().clear();
+        List<Role> newRoles = roleRepository.findAllById(userRequestDto.getRoleIds());
+//        user.setRoles(newRoles);
+        user.getRoles().addAll(newRoles);
         Attachment attachment = attachmentRepository.findById(userRequestDto.getAttachmentId()).orElseThrow(
                 () -> new IllegalArgumentException("Attachment not found"));
         user.setAttachment(attachment);
