@@ -144,7 +144,33 @@
                 document.getElementById("user-lastName").value = res.data.lastName;
                 document.getElementById("user-userName").value = res.data.username;
                 document.getElementById("user-password").value = res.data.password;
+                attachmentId = res.data.attachmentId;
                 document.getElementById("img").src = "http://localhost:8080/api/file/" + res.data.attachmentId;
+
+                // selectedRoleIds = [];
+                // document.getElementById("selectedRoles").innerHTML = "";
+
+                for (let role of res.data.roleResDtos) {
+                    selectedRoleIds.push(role.id);
+
+                    let container = document.getElementById("selectedRoles");
+
+                    let badge = document.createElement("span");
+                    badge.className = "badge bg-primary d-flex align-items-center gap-2 p-2";
+                    badge.innerHTML = `
+                     ${role.roleName}
+                   <button type="button" class="btn-close btn-close-white" aria-label="Remove"></button>
+                  `;
+
+                    badge.querySelector("button").onclick = function () {
+                        container.removeChild(badge);
+                        selectedRoleIds = selectedRoleIds.filter(id => id !== role.id); // ✅ string emas, number
+                        console.log("Tanlangan rollar:", selectedRoleIds);
+
+                    };
+
+                    container.appendChild(badge);
+                }
                 modal.show();
 
             }).catch(err => {
@@ -167,45 +193,6 @@
 
     }
 
-    // function addUser(event) {
-    //     event.preventDefault();
-    //
-    //     const firstName = document.getElementById("user-firstName").value;
-    //     const lastName = document.getElementById("user-lastName").value;
-    //     const username = document.getElementById("user-userName").value;
-    //     const password = document.getElementById("user-password").value;
-    //     const roleId = document.getElementById("selectRole").value;
-    //
-    //     axios({
-    //         url: "http://localhost:8080/api/super_admin",
-    //         method: "POST",
-    //         data: {
-    //             firstName: firstName,
-    //             lastName: lastName,
-    //             username: username,
-    //             password: password,
-    //             roleId: roleId,
-    //             attachmentId: attachmentId
-    //         },
-    //         headers: {
-    //             "Authorization": localStorage.getItem("token"),
-    //         }
-    //     }).then(res => {
-    //         console.log(res.data);
-    //         let modalElement = document.getElementById("userModal");
-    //         let modal = bootstrap.Modal.getInstance(modalElement);
-    //         modal.hide();
-    //         getAllUsers();
-    //         document.querySelector("#userModal form").reset();
-    //         document.getElementById("img").src = "images/default.jpg";
-    //         attachmentId = "";
-    //
-    //     }).catch(err => {
-    //         console.error("Error loading users:", err);
-    //     });
-    //
-    // }
-
     function addUser(event) {
         event.preventDefault();
 
@@ -213,6 +200,7 @@
         const lastName = document.getElementById("user-lastName").value;
         const username = document.getElementById("user-userName").value;
         const password = document.getElementById("user-password").value;
+
         axios({
             url: currentUserId ? "http://localhost:8080/api/super_admin/" + currentUserId : "http://localhost:8080/api/super_admin",
             method: currentUserId ? "PUT" : "POST",
@@ -237,7 +225,7 @@
             document.getElementById("img").src = "images/default.jpg";
             attachmentId = "";
             selectedRoleIds = [];
-            document.getElementById("selectedRoles").innerHTML = "";
+            document.getElementById("selectedRoles").innerHTML = 0;
         }).catch(err => {
             console.error("Error loading users:", err);
         });
@@ -280,7 +268,7 @@
     }
 
     function addRoleToList(select) {
-        const roleId = select.value;
+        const roleId = parseInt(select.value);   // ✅ string emas, number
         const roleName = select.options[select.selectedIndex].text;
 
         // Agar oldin qo‘shilgan bo‘lsa - qayt
@@ -295,16 +283,17 @@
         badge.innerHTML = `
         ${roleName}
         <button type="button" class="btn-close btn-close-white" aria-label="Remove"></button>
-         `;
+    `;
 
         // ❌ bosilganda o‘chirish
         badge.querySelector("button").onclick = function () {
             container.removeChild(badge);
-            selectedRoleIds = selectedRoleIds.filter(id => id !== roleId);
+            selectedRoleIds = selectedRoleIds.filter(id => id !== roleId);  // ✅ endi ishlaydi
         };
 
         container.appendChild(badge);
     }
+
 
 
     function deleteUser(id) {
