@@ -25,7 +25,6 @@ public class SuperAdminController {
 
     @PostMapping
     public ResponseEntity<?> addUser(@RequestBody UserRequestDto userRequestDto) {
-        System.out.println(userRequestDto);
         return ResponseEntity.status(201).body(superAdminService.addUsers(userRequestDto));
     }
 
@@ -36,13 +35,11 @@ public class SuperAdminController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
-        System.out.println(id);
         return ResponseEntity.status(200).body(superAdminService.deleteUser(id));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Integer id, @RequestBody UserRequestDto userRequestDto) {
-        System.out.println(userRequestDto);
         return ResponseEntity.status(200).body(superAdminService.updateUser(id, userRequestDto));
     }
 
