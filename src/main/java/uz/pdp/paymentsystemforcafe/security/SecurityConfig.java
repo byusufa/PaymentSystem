@@ -29,9 +29,9 @@ public class SecurityConfig {
                 req
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/login/**", "/images/**", "/api/file/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/category/**", "/api/product/**", "/api/product/category/**", "/api/order", "/api/orderItem/**").hasRole("CASHIER")
+                        .requestMatchers(HttpMethod.GET, "/api/category/**", "/api/product/**", "/api/product/category/**", "/api/order", "/api/orderItem/**").hasAnyRole("CASHIER","ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/order/**").hasRole("CASHIER")
-                        .requestMatchers("/api/category/**", "/api/product/**", "/api/order/**","/api/report/**").hasRole("ADMIN")
+                        .requestMatchers("/api/category/**", "/api/product/**", "/api/order/**","/api/report/**","/api/orderItem/**").hasRole("ADMIN")
                         .requestMatchers("/api/super_admin/**").hasRole("SUPER_ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/logout").hasAnyRole("CASHIER", "ADMIN", "SUPER_ADMIN")
                         .anyRequest().authenticated());
