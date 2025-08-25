@@ -16,7 +16,6 @@ import uz.pdp.paymentsystemforcafe.repo.AttachmentRepository;
 import uz.pdp.paymentsystemforcafe.repo.RoleRepository;
 import uz.pdp.paymentsystemforcafe.repo.UserRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -135,7 +134,6 @@ public class SuperAdminService {
         user.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         user.getRoles().clear();
         List<Role> newRoles = roleRepository.findAllById(userRequestDto.getRoleIds());
-//        user.setRoles(newRoles);
         user.getRoles().addAll(newRoles);
         Attachment attachment = attachmentRepository.findById(userRequestDto.getAttachmentId()).orElseThrow(
                 () -> new IllegalArgumentException("Attachment not found"));
