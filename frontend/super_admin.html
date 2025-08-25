@@ -184,7 +184,7 @@
             document.getElementById("user-lastName").value = "";
             document.getElementById("user-userName").value = "";
             document.getElementById("user-password").value = ""
-            document.getElementById("selectRole").selectedIndex = 0;
+            document.getElementById("selectRole").selectedIndex = "";
             document.getElementById("img").src = "images/default.jpg";
             modal.show();
 
@@ -225,7 +225,7 @@
             document.getElementById("img").src = "images/default.jpg";
             attachmentId = "";
             selectedRoleIds = [];
-            document.getElementById("selectedRoles").innerHTML = 0;
+            document.getElementById("selectedRoles").innerHTML = "";
         }).catch(err => {
             console.error("Error loading users:", err);
         });
