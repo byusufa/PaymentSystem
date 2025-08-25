@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.paymentsystemforcafe.dto.CategoryRequestDto;
-import uz.pdp.paymentsystemforcafe.dto.CategoryResponseDto;
-import uz.pdp.paymentsystemforcafe.entity.Category;
 import uz.pdp.paymentsystemforcafe.service.CategoryService;
 
 
@@ -39,7 +37,6 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Integer id, @RequestBody CategoryRequestDto categoryRequestDto) {
-
         return ResponseEntity.status(200).body(categoryService.updateCategory(id, categoryRequestDto));
     }
 
