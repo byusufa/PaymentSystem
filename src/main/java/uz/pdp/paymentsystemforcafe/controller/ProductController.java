@@ -4,8 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.paymentsystemforcafe.dto.ProductRequestDto;
-import uz.pdp.paymentsystemforcafe.dto.ProductResponseDto;
-import uz.pdp.paymentsystemforcafe.entity.Product;
 import uz.pdp.paymentsystemforcafe.service.ProductService;
 
 @RequestMapping("/api/product")
